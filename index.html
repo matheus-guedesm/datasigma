@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Data Sigma Consultoria | Lean + Data Driven BI</title>
+
+<!-- Favicon -->
+<link rel="icon" type="image/png" href="favicon.png">
+<!-- se for .ico -->
+<!-- <link rel="icon" type="image/x-icon" href="favicon.ico"> -->
+</head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Futuristic Dark Mode with Neon Blue Accent -->
+    <!-- Application Structure Plan: A estrutura de "jornada de apresentação" vertical foi mantida, mas aprimorada com um tema escuro e animações para criar uma experiência mais imersiva e tecnológica. O fluxo (Pitch -> Entregáveis -> Modelo -> Projeções -> Diagnóstico) continua lógico para uma apresentação de negócios, agora incluindo uma ferramenta de captura de leads. -->
+    <!-- Visualization & Content Choices: 1. Business Model Canvas: O grid interativo foi mantido, mas reestilizado com um efeito de brilho neon. 2. Projeções Financeiras: O gráfico de barras/linha foi mantido, adaptado para o tema escuro. 3. Formulário de Diagnóstico: Adicionado como uma nova seção interativa usando HTML/JS para simular a captura de dados, mantendo a coesão visual e funcionalidade dentro da SPA. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a; /* slate-900 */
+            color: #cbd5e1; /* slate-300 */
+            scroll-behavior: smooth;
+        }
+        #particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 450px;
+            max-height: 60vh;
+        }
+        .canvas-block {
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            border-color: #334155; /* slate-700 */
+        }
+        .canvas-block:hover, .canvas-block.active {
+            transform: translateY(-8px);
+            border-color: #2563eb; /* blue-600 */
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.5), 0 0 30px rgba(59, 130, 246, 0.3);
+        }
+        .detail-content { display: none; }
+        .detail-content.active { display: block; }
+        .fade-in { animation: fadeIn 0.6s ease-in-out; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, transparent, #334155, transparent);
+        }
+        .timeline-item {
+            position: relative;
+        }
+        .timeline-dot {
+            position: absolute;
+            left: 50%;
+            top: 2.5rem;
+            transform: translateX(-50%);
+            width: 1.5rem;
+            height: 1.5rem;
+            border-radius: 9999px;
+            background-color: #0f172a;
+            border: 3px solid #3b82f6;
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.7);
+        }
+        .glass-card {
+            background: rgba(30, 41, 59, 0.6); /* slate-800 com transparência */
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(51, 65, 85, 0.5); /* slate-700 com transparência */
+        }
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .scenario-btn.active {
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.7);
+        }
+    </style>
+</head>
+<body class="text-slate-300">
+
+    <canvas id="particle-canvas"></canvas>
+
+    <header class="bg-slate-900/80 backdrop-blur-sm shadow-md shadow-blue-500/10 sticky top-0 z-20">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+             <img src="logo.png" alt="Data Sigma Consultoria" class="h-10 w-auto">
+            <h1 class="text-2xl font-bold text-slate-100">Data <span class="text-blue-500">Sigma</span> Consultoria</h1> 
+            <div class="hidden md:flex space-x-6">
+                <a href="#pitch" class="text-slate-300 hover:text-blue-400 font-medium">Pitch</a>
+                <a href="#deliverables" class="text-slate-300 hover:text-blue-400 font-medium">Entregáveis</a>
+                <a href="#canvas" class="text-slate-300 hover:text-blue-400 font-medium">O Modelo</a>
+                <a href="#projections" class="text-slate-300 hover:text-blue-400 font-medium">Projeções</a>
+                <a href="#diagnostico" class="text-slate-300 hover:text-blue-400 font-medium">Diagnóstico</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6 py-12">
+        <div class="relative">
+            <div class="timeline hidden md:block"></div>
+
+            <div id="pitch" class="timeline-item text-center mb-24 md:mb-32 reveal">
+                <div class="timeline-dot hidden md:block"></div>
+                <h2 class="text-4xl md:text-5xl font-extrabold text-slate-100 leading-tight mb-4">O Pitch: A Conexão Perdida do Mercado</h2>
+                <p class="text-xl text-slate-400 max-w-4xl mx-auto mb-8">Empresas gastam rios de dinheiro em sistemas e consultorias, mas continuam com os mesmos problemas: processos lentos e decisões baseadas em achismo. Por quê?</p>
+                <p class="text-2xl font-semibold text-slate-100 max-w-4xl mx-auto glass-card p-8 rounded-lg border-l-4 border-blue-500 shadow-lg shadow-blue-500/10">
+                    Porque as consultorias de <span class="text-blue-400">processos</span> não dominam <span class="text-blue-400">dados</span>, e as de <span class="text-blue-400">dados</span> não entendem de <span class="text-blue-400">processos</span>. Nós somos a ponte. Combinamos Lean Six Sigma e Business Intelligence para transformar dados em lucro e eficiência.
+                </p>
+            </div>
+
+            <div id="deliverables" class="timeline-item mb-24 md:mb-32 reveal">
+                <div class="timeline-dot hidden md:block"></div>
+                <div class="text-center">
+                    <h2 class="text-4xl font-extrabold text-slate-100 mb-4">Nossos Entregáveis</h2>
+                    <p class="text-xl text-slate-400 max-w-3xl mx-auto">Cada pacote é desenhado para entregar valor tangível em diferentes estágios de maturidade do cliente.</p>
+                </div>
+                <div class="mt-12 grid md:grid-cols-3 gap-8">
+                    <div class="glass-card p-8 rounded-lg shadow-lg hover:shadow-blue-500/20 transition-shadow duration-300 border-t-4 border-blue-400">
+                        <h3 class="text-2xl font-bold mb-3 text-slate-100">1. Diagnostic & Insights</h3>
+                        <p class="text-slate-400 mb-4">Mapeamos processos e dados para encontrar gargalos e oportunidades escondidas.</p>
+                        <ul class="list-disc list-inside space-y-2 text-slate-300">
+                            <li>Assessment de processos e dados</li>
+                            <li>Dashboards de diagnóstico</li>
+                            <li>Relatório executivo com plano de ação</li>
+                        </ul>
+                    </div>
+                    <div class="glass-card p-8 rounded-lg shadow-lg hover:shadow-blue-500/20 transition-shadow duration-300 border-t-4 border-blue-500">
+                        <h3 class="text-2xl font-bold mb-3 text-slate-100">2. Data Driven Operations</h3>
+                        <p class="text-slate-400 mb-4">Implementamos a cultura de dados, conectando métricas a decisões operacionais.</p>
+                        <ul class="list-disc list-inside space-y-2 text-slate-300">
+                            <li>Dashboards operacionais interativos</li>
+                            <li>Automação da coleta e tratamento de dados</li>
+                            <li>Treinamento de equipes para uso dos dados</li>
+                        </ul>
+                    </div>
+                    <div class="glass-card p-8 rounded-lg shadow-lg hover:shadow-blue-500/20 transition-shadow duration-300 border-t-4 border-blue-600">
+                        <h3 class="text-2xl font-bold mb-3 text-slate-100">3. Continuous Excellence</h3>
+                        <p class="text-slate-400 mb-4">Atuamos como parceiro estratégico para sustentar a melhoria e gerar ganhos recorrentes.</p>
+                        <ul class="list-disc list-inside space-y-2 text-slate-300">
+                            <li>Monitoramento mensal de KPIs críticos</li>
+                            <li>Projetos Lean Six Sigma guiados por dados</li>
+                            <li>Suporte consultivo e evolução contínua</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div id="canvas" class="timeline-item mb-24 md:mb-32 reveal">
+                <div class="timeline-dot hidden md:block"></div>
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl font-extrabold text-slate-100">O Modelo de Negócio</h2>
+                    <p class="text-xl text-slate-400 mt-2">Clique em cada bloco para explorar os pilares da nossa operação.</p>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 text-center">
+                    <div id="block-partners" class="canvas-block col-span-2 lg:col-span-1 lg:row-span-2 p-4 glass-card rounded-lg border-2 cursor-pointer" data-target="detail-partners"><h4 class="font-semibold">🤝 Parceiros-Chave</h4></div>
+                    <div class="flex flex-col gap-4">
+                        <div id="block-activities" class="canvas-block p-4 glass-card rounded-lg border-2 cursor-pointer flex-1" data-target="detail-activities"><h4 class="font-semibold">🚀 Atividades-Chave</h4></div>
+                        <div id="block-resources" class="canvas-block p-4 glass-card rounded-lg border-2 cursor-pointer flex-1" data-target="detail-resources"><h4 class="font-semibold">🧠 Recursos-Chave</h4></div>
+                    </div>
+                    <div id="block-value" class="canvas-block lg:row-span-2 p-4 glass-card rounded-lg border-2 cursor-pointer flex flex-col justify-center" data-target="detail-value"><h4 class="font-semibold text-lg">🎁 Proposta de Valor</h4></div>
+                    <div class="flex flex-col gap-4">
+                        <div id="block-relations" class="canvas-block p-4 glass-card rounded-lg border-2 cursor-pointer flex-1" data-target="detail-relations"><h4 class="font-semibold">💬 Relacionamento</h4></div>
+                        <div id="block-channels" class="canvas-block p-4 glass-card rounded-lg border-2 cursor-pointer flex-1" data-target="detail-channels"><h4 class="font-semibold">📣 Canais</h4></div>
+                    </div>
+                    <div id="block-segments" class="canvas-block col-span-2 lg:col-span-1 lg:row-span-2 p-4 glass-card rounded-lg border-2 cursor-pointer" data-target="detail-segments"><h4 class="font-semibold">🎯 Segmentos de Clientes</h4></div>
+                    <div id="block-costs" class="canvas-block col-span-2 lg:col-span-2 p-4 glass-card rounded-lg border-2 cursor-pointer" data-target="detail-costs"><h4 class="font-semibold">💸 Estrutura de Custos</h4></div>
+                    <div id="block-revenue" class="canvas-block col-span-2 lg:col-span-3 p-4 glass-card rounded-lg border-2 cursor-pointer" data-target="detail-revenue"><h4 class="font-semibold">💰 Fontes de Receita</h4></div>
+                </div>
+                <div id="details-container" class="mt-8 p-8 glass-card rounded-lg shadow-md min-h-[12rem]">
+                    <div id="detail-initial" class="text-center text-slate-500 flex items-center justify-center h-full"><p>Selecione um bloco acima para ver os detalhes</p></div>
+                    <div id="detail-partners" class="detail-content"><h4 class="text-xl font-bold mb-4 text-blue-400">Parceiros-Chave</h4><ul class="list-disc list-inside space-y-2"><li><b>Google (Cloud Partner):</b> Para infraestrutura de dados robusta e escalável.</li><li><b>Consultores Lean/Six Sigma freelancers:</b> Para escalar a capacidade de entrega.</li><li><b>Agências de Marketing Digital:</b> Para geração qualificada de leads.</li></ul></div>
+                    <div id="detail-activities" class="detail-content"><h4 class="text-xl font-bold mb-4 text-blue-400">Atividades-Chave</h4><ul class="list-disc list-inside space-y-2"><li>Consultoria em Processos (Lean)</li><li>Análise e Engenharia de Dados</li><li>Desenvolvimento de Dashboards (BI) e Automações</li><li>Workshops e Treinamentos</li></ul></div>
+                    <div id="detail-resources" class="detail-content"><h4 class="text-xl font-bold mb-4 text-blue-400">Recursos-Chave</h4><ul class="list-disc list-inside space-y-2"><li><b>Intelectual:</b> Expertise combinada em Lean, BI, GCP, Python.</li><li><b>Humano:</b> Equipe multidisciplinar.</li><li><b>Tecnológico:</b> Infraestrutura em nuvem.</li></ul></div>
+                    <div id="detail-value" class="detail-content"><h4 class="text-xl font-bold mb-4 text-blue-400">Proposta de Valor</h4><p class="text-lg">“Transformamos dados e processos em inteligência acionável, combinando melhoria contínua com Business Intelligence para entregar redução de custos, eficiência e crescimento.”</p></div>
+                    <div id="detail-relations" class="detail-content"><h4 class="text-xl font-bold mb-4 text-blue-400">Relacionamento com Clientes</h4><ul class="list-disc list-inside space-y-2"><li>Consultivo e de Parceria</li><li>Workshops co-criativos</li><li>Suporte contínuo</li></ul></div>
+                    <div id="detail-channels" class="detail-content"><h4 class="text-xl font-bold mb-4 text-blue-400">Canais</h4><ul class="list-disc list-inside space-y-2"><li>Prospecção ativa (LinkedIn)</li><li>Marketing de Conteúdo</li><li>Networking em eventos</li><li>Indicações</li></ul></div>
+                    <div id="detail-segments" class="detail-content"><h4 class="text-xl font-bold mb-4 text-blue-400">Segmentos de Clientes</h4><ul class="list-disc list-inside space-y-2"><li><b>PMEs:</b> Em fase de profissionalização da gestão.</li><li><b>Grandes Empresas:</b> Departamentos específicos em transformação digital.</li></ul></div>
+                    <div id="detail-costs" class="detail-content"><h4 class="text-xl font-bold mb-4 text-blue-400">Estrutura de Custos</h4><ul class="list-disc list-inside space-y-2"><li>Salários e pró-labore da equipe</li><li>Custos com software e nuvem (GCP)</li><li>Marketing e Vendas</li></ul></div>
+                    <div id="detail-revenue" class="detail-content"><h4 class="text-xl font-bold mb-4 text-blue-400">Fontes de Receita</h4><ul class="list-disc list-inside space-y-2"><li><b>Projetos Pontuais:</b> Pacote 1 (Diagnóstico).</li><li><b>Projetos de Implantação:</b> Pacote 2 (Operações Data-Driven).</li><li><b>Contratos Recorrentes:</b> Pacote 3 (Excelência Contínua).</li></ul></div>
+                </div>
+            </div>
+
+            <div id="projections" class="timeline-item mb-24 md:mb-32 reveal">
+                <div class="timeline-dot hidden md:block"></div>
+                <div class="text-center">
+                    <h2 class="text-4xl font-extrabold text-slate-100 mb-4">Projeções Financeiras (5 Anos)</h2>
+                    <p class="text-xl text-slate-400 max-w-3xl mx-auto">Estimativa de faturamento com base em um crescimento saudável. Selecione um cenário para análise.</p>
+                </div>
+                <div class="mt-12 glass-card p-6 rounded-lg shadow-lg">
+                    <div class="flex justify-center items-center mb-6 space-x-2">
+                        <button id="btn-pessimista" class="scenario-btn px-4 py-2 rounded-md font-semibold text-sm transition-all duration-300 bg-amber-500/10 text-amber-400 hover:bg-amber-500/20">Pessimista</button>
+                        <button id="btn-realista" class="scenario-btn px-4 py-2 rounded-md font-semibold text-sm transition-all duration-300 bg-blue-500 text-white shadow-lg active">Realista</button>
+                        <button id="btn-otimista" class="scenario-btn px-4 py-2 rounded-md font-semibold text-sm transition-all duration-300 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20">Otimista</button>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="projectionChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div id="diagnostico" class="timeline-item reveal">
+                <div class="timeline-dot hidden md:block"></div>
+                <div class="text-center">
+                     <h2 class="text-4xl font-extrabold text-slate-100 mb-4">Diagnóstico Interativo</h2>
+                    <p class="text-xl text-slate-400 max-w-3xl mx-auto">Simule o primeiro contato com um cliente. Responda ao formulário para ver como capturamos valor desde o início.</p>
+                </div>
+                <div id="form-container" class="mt-12 glass-card p-8 rounded-lg shadow-lg max-w-4xl mx-auto">
+                    <form id="diag-form" class="space-y-6">
+                        <div>
+                            <label for="nome" class="block text-sm font-medium text-slate-300 mb-2">Qual é o seu nome?</label>
+                            <input type="text" id="nome" required class="w-full bg-slate-700/50 border border-slate-600 rounded-md p-3 text-slate-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                        </div>
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-slate-300 mb-2">E o seu e-mail profissional?</label>
+                            <input type="email" id="email" required class="w-full bg-slate-700/50 border border-slate-600 rounded-md p-3 text-slate-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                        </div>
+                         <div>
+                            <p class="block text-sm font-medium text-slate-300 mb-2">Pensando no seu principal processo operacional, qual destas frases descreve melhor a sua realidade hoje?</p>
+                            <div class="space-y-2">
+                                <label class="flex items-center p-3 w-full bg-slate-700/50 rounded-md border border-slate-600 hover:bg-slate-700 cursor-pointer"><input type="radio" name="processo" value="otimo" class="h-4 w-4 text-blue-600 bg-slate-800 border-slate-500 focus:ring-blue-500"><span class="ml-3 text-slate-200">Tudo flui bem, é padronizado e raramente temos surpresas.</span></label>
+                                <label class="flex items-center p-3 w-full bg-slate-700/50 rounded-md border border-slate-600 hover:bg-slate-700 cursor-pointer"><input type="radio" name="processo" value="gargalos" class="h-4 w-4 text-blue-600 bg-slate-800 border-slate-500 focus:ring-blue-500"><span class="ml-3 text-slate-200">Funciona, mas dependemos de pessoas específicas e temos gargalos.</span></label>
+                                <label class="flex items-center p-3 w-full bg-slate-700/50 rounded-md border border-slate-600 hover:bg-slate-700 cursor-pointer"><input type="radio" name="processo" value="retrabalho" class="h-4 w-4 text-blue-600 bg-slate-800 border-slate-500 focus:ring-blue-500"><span class="ml-3 text-slate-200">Temos retrabalho com frequência e 'apagamos incêndios'.</span></label>
+                            </div>
+                        </div>
+                        <div>
+                            <label for="problema" class="block text-sm font-medium text-slate-300 mb-2">Se você pudesse resolver UM grande problema na sua operação na próxima semana, qual seria?</label>
+                            <textarea id="problema" rows="4" required class="w-full bg-slate-700/50 border border-slate-600 rounded-md p-3 text-slate-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"></textarea>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="bg-blue-600 text-white font-bold py-3 px-8 rounded-full hover:bg-blue-500 transition-all duration-300 shadow-lg hover:shadow-blue-500/50 transform hover:scale-105">Enviar Diagnóstico</button>
+                        </div>
+                    </form>
+                    <div id="form-thank-you" class="hidden text-center py-10">
+                        <h3 class="text-3xl font-bold text-blue-400 mb-4">Obrigado!</h3>
+                        <p class="text-lg text-slate-300">Seus insights estão a caminho. Nossa equipe analisará suas respostas e entrará em contato em breve.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="bg-slate-900/50 mt-24">
+        <div class="container mx-auto px-6 py-8 text-center text-slate-400">
+            <p>&copy; 2025 Lean & Data Driven BI Consulting.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const canvasBlocks = document.querySelectorAll('.canvas-block');
+            const detailContents = document.querySelectorAll('.detail-content');
+            const initialDetail = document.getElementById('detail-initial');
+
+            canvasBlocks.forEach(block => {
+                block.addEventListener('click', () => {
+                    const targetId = block.dataset.target;
+                    const targetContent = document.getElementById(targetId);
+                    canvasBlocks.forEach(b => b.classList.remove('active'));
+                    block.classList.add('active');
+                    initialDetail.style.display = 'none';
+                    detailContents.forEach(content => content.classList.remove('active', 'fade-in'));
+                    if (targetContent) {
+                        targetContent.classList.add('active', 'fade-in');
+                    }
+                });
+            });
+
+            const scenarioButtons = document.querySelectorAll('.scenario-btn');
+            const projectionCtx = document.getElementById('projectionChart').getContext('2d');
+            let projectionChart;
+
+            const baseData = {
+                labels: ['Ano 1 (2025)', 'Ano 2 (2026)', 'Ano 3 (2027)', 'Ano 4 (2028)', 'Ano 5 (2029)'],
+                scenarios: {
+                    pessimista: { diagnostic: { initial: 1, growth: 1 }, dataDriven: { initial: 0, growth: 1 }, continuous: { initial: 0, growth: 0 } },
+                    realista: { diagnostic: { initial: 2, growth: 2 }, dataDriven: { initial: 1, growth: 1.5 }, continuous: { initial: 0, growth: 1 } },
+                    otimista: { diagnostic: { initial: 4, growth: 3 }, dataDriven: { initial: 2, growth: 2 }, continuous: { initial: 1, growth: 1 } }
+                },
+                prices: { diagnostic: 11500, dataDriven: 35000, continuous: 18500 * 12 }
+            };
+            
+            function calculateProjections(scenario) {
+                const { labels, prices } = baseData;
+                const scenarioConfig = baseData.scenarios[scenario];
+                let projDiagnostic = [], projDataDriven = [], projContinuous = [];
+                let numDiagnostic = 0, numDataDriven = 0, numContinuous = 0;
+                for (let i = 0; i < labels.length; i++) {
+                    if (i === 0) { numDiagnostic = 1; numDataDriven = 0; numContinuous = 0; }
+                    else if (i === 1) { numDiagnostic = scenarioConfig.diagnostic.initial; numDataDriven = scenarioConfig.dataDriven.initial; numContinuous = scenarioConfig.continuous.initial / 2; }
+                    else { numDiagnostic += scenarioConfig.diagnostic.growth; numDataDriven += scenarioConfig.dataDriven.growth; numContinuous += scenarioConfig.continuous.growth; }
+                    projDiagnostic.push(numDiagnostic * prices.diagnostic);
+                    projDataDriven.push(numDataDriven * prices.dataDriven);
+                    projContinuous.push(numContinuous * prices.continuous);
+                }
+                const totals = labels.map((_, i) => projDiagnostic[i] + projDataDriven[i] + projContinuous[i]);
+                return { projDiagnostic, projDataDriven, projContinuous, totals };
+            }
+
+            function updateChart(scenario) {
+                const chartOptions = {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { stacked: true, grid: { color: 'rgba(255, 255, 255, 0.1)' }, ticks: { color: '#94a3b8' } },
+                        y: { stacked: true, beginAtZero: true, grid: { color: 'rgba(255, 255, 255, 0.1)' }, ticks: { color: '#94a3b8', callback: value => 'R$ ' + (value / 1000).toFixed(0) + 'k' } }
+                    },
+                    plugins: {
+                        legend: { position: 'top', labels: { color: '#cbd5e1' } },
+                        tooltip: { mode: 'index', intersect: false, backgroundColor: '#1e293b', titleFont: { weight: 'bold' }, bodyColor: '#cbd5e1', borderColor: '#334155', borderWidth: 1,
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) { label += ': '; }
+                                    if (context.parsed.y !== null) { label += new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(context.parsed.y); }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                };
+                const { projDiagnostic, projDataDriven, projContinuous, totals } = calculateProjections(scenario);
+                if (projectionChart) {
+                    projectionChart.data.datasets[0].data = projDiagnostic;
+                    projectionChart.data.datasets[1].data = projDataDriven;
+                    projectionChart.data.datasets[2].data = projContinuous;
+                    projectionChart.data.datasets[3].data = totals;
+                    projectionChart.update();
+                } else {
+                    projectionChart = new Chart(projectionCtx, {
+                        type: 'bar',
+                        data: {
+                            labels: baseData.labels,
+                            datasets: [
+                                { type: 'bar', label: 'Pacote 1: Diagnóstico', data: projDiagnostic, backgroundColor: 'rgba(96, 165, 250, 0.7)' },
+                                { type: 'bar', label: 'Pacote 2: Operações', data: projDataDriven, backgroundColor: 'rgba(52, 211, 153, 0.7)' },
+                                { type: 'bar', label: 'Pacote 3: Excelência', data: projContinuous, backgroundColor: 'rgba(251, 146, 60, 0.7)' },
+                                { type: 'line', label: 'Faturamento Total', data: totals, borderColor: '#f1f5f9', borderWidth: 3, pointBackgroundColor: '#f1f5f9', pointRadius: 5, tension: 0.2 }
+                            ]
+                        },
+                        options: chartOptions
+                    });
+                }
+            }
+
+            scenarioButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    scenarioButtons.forEach(btn => btn.classList.remove('active', 'bg-blue-500', 'text-white', 'shadow-lg'));
+                    button.classList.add('active', 'bg-blue-500', 'text-white', 'shadow-lg');
+                    const scenario = button.id.split('-')[1];
+                    updateChart(scenario);
+                });
+            });
+
+            updateChart('realista');
+
+            const canvas = document.getElementById('particle-canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            let particlesArray;
+            const mouse = { x: null, y: null, radius: (canvas.height/100) * (canvas.width/100) };
+            window.addEventListener('mousemove', function(event) { mouse.x = event.x; mouse.y = event.y; });
+            class Particle {
+                constructor(x, y, directionX, directionY, size, color) { this.x = x; this.y = y; this.directionX = directionX; this.directionY = directionY; this.size = size; this.color = color; }
+                draw() { ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false); ctx.fillStyle = 'rgba(59, 130, 246, 0.3)'; ctx.fill(); }
+                update() {
+                    if (this.x > canvas.width || this.x < 0) { this.directionX = -this.directionX; }
+                    if (this.y > canvas.height || this.y < 0) { this.directionY = -this.directionY; }
+                    let dx = mouse.x - this.x; let dy = mouse.y - this.y;
+                    let distance = Math.sqrt(dx*dx + dy*dy);
+                    if (distance < mouse.radius + this.size) {
+                        if (mouse.x < this.x && this.x < canvas.width - this.size * 10) { this.x += 5; }
+                        if (mouse.x > this.x && this.x > this.size * 10) { this.x -= 5; }
+                        if (mouse.y < this.y && this.y < canvas.height - this.size * 10) { this.y += 5; }
+                        if (mouse.y > this.y && this.y > this.size * 10) { this.y -= 5; }
+                    }
+                    this.x += this.directionX; this.y += this.directionY; this.draw();
+                }
+            }
+            function init() {
+                particlesArray = []; let numberOfParticles = (canvas.height * canvas.width) / 9000;
+                for (let i = 0; i < numberOfParticles; i++) {
+                    let size = (Math.random() * 2) + 1;
+                    let x = (Math.random() * ((innerWidth - size * 2) - (size * 2)) + size * 2);
+                    let y = (Math.random() * ((innerHeight - size * 2) - (size * 2)) + size * 2);
+                    let directionX = (Math.random() * .2) - .1; let directionY = (Math.random() * .2) - .1;
+                    let color = 'rgba(59, 130, 246, 0.5)';
+                    particlesArray.push(new Particle(x, y, directionX, directionY, size, color));
+                }
+            }
+            function connect() {
+                let opacityValue = 1;
+                for (let a = 0; a < particlesArray.length; a++) {
+                    for (let b = a; b < particlesArray.length; b++) {
+                        let distance = ((particlesArray[a].x - particlesArray[b].x) * (particlesArray[a].x - particlesArray[b].x)) + ((particlesArray[a].y - particlesArray[b].y) * (particlesArray[a].y - particlesArray[b].y));
+                        if (distance < (canvas.width/7) * (canvas.height/7)) {
+                            opacityValue = 1 - (distance/20000);
+                            ctx.strokeStyle = 'rgba(96, 165, 250,' + opacityValue + ')';
+                            ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(particlesArray[a].x, particlesArray[a].y); ctx.lineTo(particlesArray[b].x, particlesArray[b].y); ctx.stroke();
+                        }
+                    }
+                }
+            }
+            function animate() { requestAnimationFrame(animate); ctx.clearRect(0,0,innerWidth, innerHeight); for (let i = 0; i < particlesArray.length; i++) { particlesArray[i].update(); } connect(); }
+            window.addEventListener('resize', function() { canvas.width = innerWidth; canvas.height = innerHeight; mouse.radius = ((canvas.height/80) * (canvas.height/80)); init(); });
+            window.addEventListener('mouseout', function() { mouse.x = undefined; mouse.y = undefined; });
+            init(); animate();
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.reveal').forEach(el => {
+                observer.observe(el);
+            });
+            
+            const diagForm = document.getElementById('diag-form');
+            const formContainer = document.getElementById('form-container');
+            const formThankYou = document.getElementById('form-thank-you');
+
+            diagForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                diagForm.classList.add('fade-out');
+                setTimeout(() => {
+                    diagForm.style.display = 'none';
+                    formThankYou.style.display = 'block';
+                    formThankYou.classList.add('fade-in');
+                }, 500);
+            });
+        });
+    </script>
+    <style>
+        .fade-out { animation: fadeOut 0.5s ease-in-out forwards; }
+        @keyframes fadeOut {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(-10px); }
+        }
+    </style>
+</body>
+</html>
