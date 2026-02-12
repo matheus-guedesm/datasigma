@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Sigma | Infográfico Estratégico</title>
+    
+    <!-- Fonts: Montserrat & Roboto as defined in Brandbook -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Custom Config & Styles -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'sigma-blue': '#5CA4B8', // Brandbook: Sigma Blue
+                        'sigma-dark-blue': '#3D8B9F',
+                        'lean-green': '#A4D65E', // Brandbook: Lean Green
+                        'lean-dark-green': '#8CC63F',
+                        'industrial-grey': '#333333', // Brandbook: Industrial Grey
+                        'tech-bg': '#F5F7FA',
+                    },
+                    fontFamily: {
+                        sans: ['Roboto', 'sans-serif'],
+                        heading: ['Montserrat', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Chart Container Rules - MANDATORY */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px; /* Max width to prevent stretching */
+            height: 300px; /* Base height */
+            max-height: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+
+        /* Data Mesh Pattern Background */
+        .bg-mesh {
+            background-image: radial-gradient(#5CA4B8 1px, transparent 1px);
+            background-size: 20px 20px;
+            opacity: 0.1;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-industrial-grey font-sans leading-relaxed">
+
+    <!-- BOTÃO DE VOLTAR (Adicionado para navegação) -->
+    <div class="fixed top-4 left-4 z-50">
+        <a href="index.html" class="flex items-center gap-2 bg-industrial-grey text-white px-4 py-2 rounded-full shadow-lg hover:bg-gray-800 transition-colors text-sm font-bold">
+            ← Voltar ao Site
+        </a>
+    </div>
+
+    <!-- HERO SECTION -->
+    <header class="bg-white shadow-sm relative overflow-hidden">
+        <div class="absolute inset-0 bg-mesh pointer-events-none"></div>
+        <div class="container mx-auto px-6 py-12 md:py-20 relative z-10">
+            <div class="flex flex-col md:flex-row items-center justify-between">
+                <div class="md:w-2/3">
+                    <div class="inline-block px-3 py-1 mb-4 text-xs font-bold tracking-wider text-white uppercase bg-gradient-to-r from-lean-green to-sigma-blue rounded-full">
+                        Playbook Estratégico V2.1
+                    </div>
+                    <h1 class="text-4xl md:text-6xl font-heading font-bold text-gray-900 mb-4">
+                        DATA <span class="text-transparent bg-clip-text bg-gradient-to-r from-sigma-blue to-lean-green">SIGMA</span>
+                    </h1>
+                    <h2 class="text-xl md:text-2xl font-light text-gray-600 mb-6">
+                        A Ponte entre a Eficiência Lean e a Potência Cloud.
+                    </h2>
+                    <p class="text-lg text-gray-700 max-w-2xl border-l-4 border-lean-green pl-4 italic">
+                        "Existimos para garantir que nenhum líder precise pilotar seu negócio no escuro, transformando 'Cemitérios de Dados' em motores de crescimento."
+                    </p>
+                </div>
+                <div class="mt-8 md:mt-0 md:w-1/3 flex justify-center">
+                    <!-- HTML-based D Symbol Representation -->
+                    <div class="w-32 h-32 md:w-48 md:h-48 rounded-full border-4 border-sigma-blue flex items-center justify-center relative bg-white shadow-xl">
+                        <div class="absolute w-full h-full rounded-full border-t-4 border-lean-green animate-spin-slow" style="animation-duration: 10s;"></div>
+                        <span class="text-6xl font-heading font-bold text-gray-800">DS</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- SECTION 1: THE FOUNDERS (DNA Corporativo) -->
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-12">
+                <h3 class="text-2xl font-heading font-bold text-sigma-dark-blue mb-2">A Tríade Fundadora</h3>
+                <p class="text-gray-600 max-w-2xl mx-auto">
+                    A força da Data Sigma reside na complementaridade técnica e estratégica. Uma fusão de três mentes para cobrir todas as camadas da transformação digital.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Card 1: Rau -->
+                <div class="bg-gray-50 rounded-xl p-6 shadow-md border-t-4 border-lean-green hover:shadow-lg transition-shadow">
+                    <div class="h-12 w-12 bg-lean-green rounded-full flex items-center justify-center text-white font-bold text-xl mb-4">R</div>
+                    <h4 class="text-xl font-heading font-bold mb-1">Rau</h4>
+                    <p class="text-sm font-bold text-gray-500 uppercase mb-4">Estratégia & Excelência</p>
+                    <p class="text-sm text-gray-700 mb-4">
+                        <strong>O Porquê.</strong> O elo entre negócio e operação. Domínio em Lean Six Sigma e WCM. Garante que o projeto resulte em impacto no P&L.
+                    </p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded">Lean</span>
+                        <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded">Visão Sistêmica</span>
+                    </div>
+                </div>
+
+                <!-- Card 2: Mathaus -->
+                <div class="bg-gray-50 rounded-xl p-6 shadow-md border-t-4 border-industrial-grey hover:shadow-lg transition-shadow">
+                    <div class="h-12 w-12 bg-industrial-grey rounded-full flex items-center justify-center text-white font-bold text-xl mb-4">M</div>
+                    <h4 class="text-xl font-heading font-bold mb-1">Mathaus</h4>
+                    <p class="text-sm font-bold text-gray-500 uppercase mb-4">Sistemas & Escalabilidade</p>
+                    <p class="text-sm text-gray-700 mb-4">
+                        <strong>O Como Técnico.</strong> Arquiteto da robustez. Especialista em SAP, Backend e segurança de dados. Constrói a base onde a informação trafega.
+                    </p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-2 py-1 bg-gray-200 text-gray-800 text-xs rounded">SAP</span>
+                        <span class="px-2 py-1 bg-gray-200 text-gray-800 text-xs rounded">Arquitetura</span>
+                    </div>
+                </div>
+
+                <!-- Card 3: Matheus -->
+                <div class="bg-gray-50 rounded-xl p-6 shadow-md border-t-4 border-sigma-blue hover:shadow-lg transition-shadow">
+                    <div class="h-12 w-12 bg-sigma-blue rounded-full flex items-center justify-center text-white font-bold text-xl mb-4">M</div>
+                    <h4 class="text-xl font-heading font-bold mb-1">Matheus</h4>
+                    <p class="text-sm font-bold text-gray-500 uppercase mb-4">Inteligência & Decisão</p>
+                    <p class="text-sm text-gray-700 mb-4">
+                        <strong>O Resultado Visual.</strong> Tradutor de dados em insights. Especialista em GCP, Dataprep e Looker Studio. Transforma ruído em história.
+                    </p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded">GCP</span>
+                        <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded">Looker</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 2: ESCADA DE VALOR (Methodology) -->
+    <section class="py-16 bg-tech-bg relative">
+        <div class="container mx-auto px-6">
+            <div class="mb-12">
+                <h3 class="text-3xl font-heading font-bold text-gray-900">A Escada de Valor</h3>
+                <p class="text-gray-600 mt-2">Nossa metodologia proprietária para transformar maturidade de dados em lucro.</p>
+            </div>
+
+            <div class="relative">
+                <!-- Connecting Line (Vertical on mobile, Horizontal on desktop) -->
+                <div class="hidden md:block absolute top-1/2 left-0 w-full h-1 bg-gray-300 transform -translate-y-1/2 z-0"></div>
+                <div class="md:hidden absolute left-8 top-0 h-full w-1 bg-gray-300 z-0"></div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-12 relative z-10">
+                    
+                    <!-- Level 1 -->
+                    <div class="bg-white p-6 rounded-lg shadow-lg border-l-8 md:border-l-0 md:border-t-8 border-lean-green flex flex-col items-center text-center md:items-start md:text-left">
+                        <div class="w-16 h-16 bg-lean-green text-white rounded-full flex items-center justify-center text-2xl font-bold mb-4 border-4 border-white shadow-sm">1</div>
+                        <h4 class="text-xl font-bold text-gray-800">Alicerce Digital</h4>
+                        <span class="text-xs font-bold text-gray-400 uppercase mb-2">Antiga "Ponte"</span>
+                        <p class="text-sm text-gray-600 mb-3">Conectar o que está isolado. Tirar dados do papel e colocá-los onde podem ser lidos.</p>
+                        <p class="text-xs italic text-lean-dark-green font-semibold">"Não se constrói um império sobre areia movediça."</p>
+                    </div>
+
+                    <!-- Level 2 -->
+                    <div class="bg-white p-6 rounded-lg shadow-lg border-l-8 md:border-l-0 md:border-t-8 border-sigma-blue flex flex-col items-center text-center md:items-start md:text-left">
+                        <div class="w-16 h-16 bg-sigma-blue text-white rounded-full flex items-center justify-center text-2xl font-bold mb-4 border-4 border-white shadow-sm">2</div>
+                        <h4 class="text-xl font-bold text-gray-800">Bússola de Gestão</h4>
+                        <span class="text-xs font-bold text-gray-400 uppercase mb-2">Antiga "Visão"</span>
+                        <p class="text-sm text-gray-600 mb-3">Transformar números em decisões visuais imediatas. Dashboards e Storytelling.</p>
+                        <p class="text-xs italic text-sigma-dark-blue font-semibold">"Pilotar sem BI é voar por instrumentos na tempestade."</p>
+                    </div>
+
+                    <!-- Level 3 -->
+                    <div class="bg-white p-6 rounded-lg shadow-lg border-l-8 md:border-l-0 md:border-t-8 border-industrial-grey flex flex-col items-center text-center md:items-start md:text-left">
+                        <div class="w-16 h-16 bg-industrial-grey text-white rounded-full flex items-center justify-center text-2xl font-bold mb-4 border-4 border-white shadow-sm">3</div>
+                        <h4 class="text-xl font-bold text-gray-800">Evolução Perpétua</h4>
+                        <span class="text-xs font-bold text-gray-400 uppercase mb-2">Antiga "Estabilidade"</span>
+                        <p class="text-sm text-gray-600 mb-3">Monitoramento e melhoria contínua. A solução cresce conforme o lucro aumenta.</p>
+                        <p class="text-xs italic text-gray-600 font-semibold">"O sucesso atrai complexidade; nós a gerenciamos."</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 3: DATA & FINANCIAL IMPACT -->
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-6">
+            <h3 class="text-3xl font-heading font-bold text-gray-900 mb-8 text-center">Impacto e Projeções Financeiras</h3>
+            <p class="text-center text-gray-600 max-w-3xl mx-auto mb-12">
+                Baseado em nossa estratégia de entrada e cases reais, projetamos um primeiro ano sólido focado em diagnósticos rápidos e contratos de excelência contínua.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                
+                <!-- CHART 1: Revenue Projection -->
+                <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+                    <h4 class="text-lg font-bold text-industrial-grey mb-2">Projeção de Faturamento (Ano 1)</h4>
+                    <p class="text-xs text-gray-500 mb-6">Estimativa conservadora baseada no modelo de negócio (Diagnóstico, Data Driven, Recorrência).</p>
+                    
+                    <div class="chart-container">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                    
+                    <div class="mt-4 text-sm text-gray-600 border-t pt-4">
+                        <strong class="text-sigma-blue">Insight:</strong> O modelo "Continuous Excellence" (Recorrência) representa a maior fatia de valor a longo prazo (~49%), garantindo estabilidade.
+                    </div>
+                </div>
+
+                <!-- CHART 2: Efficiency Case Study -->
+                <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+                    <h4 class="text-lg font-bold text-industrial-grey mb-2">Case DS-25-01: Monitor de Eficiência</h4>
+                    <p class="text-xs text-gray-500 mb-6">Impacto real na redução de custos operacionais (OPEX) através da conexão de sensores e visualização OEE.</p>
+                    
+                    <div class="chart-container">
+                        <canvas id="impactChart"></canvas>
+                    </div>
+
+                    <div class="mt-4 text-sm text-gray-600 border-t pt-4">
+                        <strong class="text-lean-green">Resultado:</strong> Uma redução de <span class="font-bold text-lean-dark-green">12%</span> no OPEX e tempo de parada, gerando um valuation de projeto estimado em até R$ 120k.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 4: SERVICE COMPOSITION -->
+    <section class="py-16 bg-gray-50">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-12">
+                <h3 class="text-3xl font-heading font-bold text-gray-900">Nossa Estrutura de Portfólio</h3>
+                <p class="text-gray-600 mt-2">Do diagnóstico rápido à transformação completa.</p>
+            </div>
+
+            <!-- Custom Horizontal Bar Chart for Service Tier Pricing/Value -->
+            <div class="bg-white rounded-xl shadow-lg p-8 max-w-4xl mx-auto">
+                <div class="chart-container" style="height: 350px;">
+                    <canvas id="serviceChart"></canvas>
+                </div>
+                <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                    <div class="p-3 bg-gray-50 rounded">
+                        <span class="block text-sm font-bold text-gray-500">Diagnostic & Insights</span>
+                        <span class="block text-lg font-bold text-sigma-blue">~R$ 11.5k</span>
+                    </div>
+                    <div class="p-3 bg-gray-50 rounded">
+                        <span class="block text-sm font-bold text-gray-500">Data Driven Ops</span>
+                        <span class="block text-lg font-bold text-sigma-blue">~R$ 35k</span>
+                    </div>
+                    <div class="p-3 bg-gray-50 rounded">
+                        <span class="block text-sm font-bold text-gray-500">Continuous Excellence</span>
+                        <span class="block text-lg font-bold text-sigma-blue">~R$ 111k/semestre</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER: THE PITCH -->
+    <footer class="bg-gradient-to-r from-industrial-grey to-gray-900 text-white py-16">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-3xl font-heading font-bold mb-6">Pitch de Mestre</h2>
+            <div class="max-w-3xl mx-auto bg-white/10 p-8 rounded-lg backdrop-blur-sm border border-white/20">
+                <p class="text-lg leading-relaxed italic">
+                    "Na Data Sigma, nós não vendemos código ou dashboards isolados. Nós construímos <span class="text-lean-green font-bold">Alicerces Digitais</span> que conectam o seu chão de fábrica diretamente ao seu lucro. Atuamos como a Ponte entre o desperdício que o Lean identifica e a escala que a Nuvem proporciona."
+                </p>
+            </div>
+            <div class="mt-12">
+                <a href="index.html" class="bg-gradient-to-r from-lean-green to-sigma-blue text-white font-bold py-4 px-10 rounded-full shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition duration-300 inline-block">
+                    Voltar ao Site Principal
+                </a>
+                <p class="mt-4 text-sm text-gray-400">Data Sigma Consultoria &copy; 2026</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // --- 1. Utility Functions ---
+        
+        // Label wrapping logic for Chart.js (Strict 16-char limit)
+        function wrapLabel(str, maxChars) {
+            if (str.length <= maxChars) return str;
+            const words = str.split(' ');
+            const lines = [];
+            let currentLine = words[0];
+
+            for (let i = 1; i < words.length; i++) {
+                if ((currentLine + " " + words[i]).length <= maxChars) {
+                    currentLine += " " + words[i];
+                } else {
+                    lines.push(currentLine);
+                    currentLine = words[i];
+                }
+            }
+            lines.push(currentLine);
+            return lines;
+        }
+
+        // Global Chart Defaults
+        Chart.defaults.font.family = "'Roboto', sans-serif";
+        Chart.defaults.color = '#333333';
+        Chart.defaults.scale.grid.color = '#e5e7eb';
+
+        // Tooltip Callback Config (Mandatory)
+        const tooltipConfig = {
+            callbacks: {
+                title: function(tooltipItems) {
+                    const item = tooltipItems[0];
+                    let label = item.chart.data.labels[item.dataIndex];
+                    if (Array.isArray(label)) {
+                        return label.join(' ');
+                    } else {
+                        return label;
+                    }
+                }
+            },
+            backgroundColor: 'rgba(51, 51, 51, 0.9)',
+            titleFont: { size: 14, family: 'Montserrat' },
+            bodyFont: { size: 13, family: 'Roboto' },
+            padding: 12,
+            cornerRadius: 8,
+            displayColors: false
+        };
+
+        // --- 2. Chart Initializations ---
+
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // --- Chart 1: Revenue Projections (Year 1) ---
+            const ctxRevenue = document.getElementById('revenueChart').getContext('2d');
+            
+            // Data from "Consultoria Lean + BI_ Avaliação e Estratégia.pdf"
+            const revenueLabels = [
+                "Diagnostic & Insights (4 Projetos)",
+                "Data Driven Operations (2 Projetos)",
+                "Continuous Excellence (Recorrência)"
+            ];
+            
+            const revenueValues = [46000, 70000, 111000];
+            const totalRevenue = revenueValues.reduce((a, b) => a + b, 0);
+
+            // Apply wrapping
+            const wrappedRevenueLabels = revenueLabels.map(l => wrapLabel(l, 20)); // slightly larger limit for layout
+
+            new Chart(ctxRevenue, {
+                type: 'bar',
+                data: {
+                    labels: wrappedRevenueLabels,
+                    datasets: [{
+                        label: 'Faturamento Estimado (R$)',
+                        data: revenueValues,
+                        backgroundColor: [
+                            '#A4D65E', // Lean Green (Entry level)
+                            '#5CA4B8', // Sigma Blue (Mid level)
+                            '#3D8B9F'  // Dark Sigma Blue (High level)
+                        ],
+                        borderRadius: 6,
+                        barPercentage: 0.6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: tooltipConfig,
+                        title: {
+                            display: true,
+                            text: `Total Estimado: R$ ${totalRevenue.toLocaleString('pt-BR')}`,
+                            font: { size: 16, family: 'Montserrat', weight: 'bold' },
+                            color: '#333333',
+                            padding: { bottom: 20 }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return 'R$ ' + value / 1000 + 'k';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // --- Chart 2: Efficiency Impact (Before vs After OPEX) ---
+            const ctxImpact = document.getElementById('impactChart').getContext('2d');
+            
+            // Scenario: 100% Cost vs 88% Cost (12% Reduction)
+            // Visualizing the "Gap"
+            
+            new Chart(ctxImpact, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Custo Mantido', 'Economia Gerada (Lucro)'],
+                    datasets: [{
+                        data: [88, 12],
+                        backgroundColor: [
+                            '#e5e7eb', // Grey for remaining cost
+                            '#A4D65E'  // Lean Green for savings
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '70%',
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { usePointStyle: true, padding: 20 }
+                        },
+                        tooltip: tooltipConfig,
+                        title: {
+                            display: true,
+                            text: '-12% OPEX',
+                            position: 'bottom', // workaround for doughnut center text in simple config
+                            font: { size: 14, weight: 'bold' }
+                        }
+                    }
+                },
+                plugins: [{
+                    id: 'textCenter',
+                    beforeDraw: function(chart) {
+                        var width = chart.width,
+                            height = chart.height,
+                            ctx = chart.ctx;
+            
+                        ctx.restore();
+                        var fontSize = (height / 114).toFixed(2);
+                        ctx.font = "bold " + fontSize + "em Montserrat";
+                        ctx.textBaseline = "middle";
+                        ctx.fillStyle = "#333333";
+            
+                        var text = "12%",
+                            textX = Math.round((width - ctx.measureText(text).width) / 2),
+                            textY = height / 2;
+            
+                        ctx.fillText(text, textX, textY);
+                        ctx.save();
+                    }
+                }]
+            });
+
+            // --- Chart 3: Service Portfolio Structure ---
+            const ctxService = document.getElementById('serviceChart').getContext('2d');
+            
+            const serviceLabels = [
+                "1. Diagnostic & Insights (MVP)",
+                "2. Data Driven Operations (Upsell)",
+                "3. Continuous Excellence (Recorrência)"
+            ];
+            
+            // Value representation (Ticket Médio)
+            const serviceValues = [11500, 35000, 111000]; 
+            const wrappedServiceLabels = serviceLabels.map(l => wrapLabel(l, 25));
+
+            new Chart(ctxService, {
+                type: 'bar', // Horizontal bar is better for long labels
+                data: {
+                    labels: wrappedServiceLabels,
+                    datasets: [{
+                        label: 'Valor do Contrato (Ticket Médio)',
+                        data: serviceValues,
+                        backgroundColor: '#5CA4B8',
+                        borderColor: '#3D8B9F',
+                        borderWidth: 1,
+                        borderRadius: 4,
+                        barPercentage: 0.5
+                    }]
+                },
+                options: {
+                    indexAxis: 'y', // Horizontal Bar
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: tooltipConfig
+                    },
+                    scales: {
+                        x: {
+                            grid: { display: false },
+                            ticks: {
+                                callback: function(value) {
+                                    return 'R$ ' + value / 1000 + 'k';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
