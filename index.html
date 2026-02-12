@@ -5,22 +5,21 @@
 <title>Data Sigma Consultoria | Lean + Data Driven BI</title>
 
 <!-- Favicon -->
-<link rel="icon" type="image/png" href="favicon.png">
-<!-- se for .ico -->
-<!-- <link rel="icon" type="image/x-icon" href="favicon.ico"> -->
+<link rel="icon" type="image/png" href="favicon.png?v=3">
 </head>
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Bibliotecas para gerar o PDF (Vindas do Canvas) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- Chosen Palette: Futuristic Dark Mode with Neon Blue Accent -->
-    <!-- Application Structure Plan: A estrutura de "jornada de apresentação" vertical foi mantida, mas aprimorada com um tema escuro e animações para criar uma experiência mais imersiva e tecnológica. O fluxo (Pitch -> Entregáveis -> Modelo -> Projeções -> Diagnóstico) continua lógico para uma apresentação de negócios, agora incluindo uma ferramenta de captura de leads. -->
-    <!-- Visualization & Content Choices: 1. Business Model Canvas: O grid interativo foi mantido, mas reestilizado com um efeito de brilho neon. 2. Projeções Financeiras: O gráfico de barras/linha foi mantido, adaptado para o tema escuro. 3. Formulário de Diagnóstico: Adicionado como uma nova seção interativa usando HTML/JS para simular a captura de dados, mantendo a coesão visual e funcionalidade dentro da SPA. -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -63,7 +62,7 @@
         }
         .timeline::before {
             content: '';
-            position: absolute;
+            position: relative;
             left: 50%;
             transform: translateX(-50%);
             top: 0;
@@ -75,7 +74,7 @@
             position: relative;
         }
         .timeline-dot {
-            position: absolute;
+            position: transparent;
             left: 50%;
             top: 2.5rem;
             transform: translateX(-50%);
@@ -104,6 +103,54 @@
         .scenario-btn.active {
             box-shadow: 0 0 15px rgba(59, 130, 246, 0.7);
         }
+
+        /* Estilos Específicos do Canvas Adaptados para Dark Mode */
+        .pm-canvas-textarea {
+            width: 100%;
+            background-color: rgba(15, 23, 42, 0.6);
+            border: 1px solid #475569;
+            color: #e2e8f0;
+            padding: 0.5rem;
+            border-radius: 0.375rem;
+            flex-grow: 1;
+            font-size: 0.875rem;
+            resize: vertical;
+            min-height: 80px;
+        }
+        .pm-canvas-textarea:focus {
+            outline: none;
+            border-color: #3b82f6;
+            background-color: rgba(15, 23, 42, 0.9);
+        }
+        .pm-canvas-input {
+            width: 100%;
+            background-color: rgba(15, 23, 42, 0.6);
+            border: 1px solid #475569;
+            color: #e2e8f0;
+            padding: 0.5rem;
+            border-radius: 0.375rem;
+        }
+        .pm-canvas-card {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            background-color: rgba(30, 41, 59, 0.4);
+            border: 1px solid #334155;
+            border-radius: 0.5rem;
+            padding: 1rem;
+        }
+        .pm-canvas-card h3 {
+            color: #60a5fa; /* Blue-400 */
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 0.25rem;
+        }
+        .pm-canvas-card p {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            font-style: italic;
+            margin-bottom: 0.5rem;
+        }
     </style>
 </head>
 <body class="text-slate-300">
@@ -112,14 +159,16 @@
 
     <header class="bg-slate-900/80 backdrop-blur-sm shadow-md shadow-blue-500/10 sticky top-0 z-20">
         <div class="container mx-auto px-6 py-4 flex justify-between items-center">
-             <img src="logo.png" alt="Data Sigma Consultoria" class="h-10 w-auto">
+             <img src="logo.png" alt="Data Sigma Consultoria" class="h-8 w-auto" onerror="this.src='https://placehold.co/150x50/0f172a/3b82f6?text=Data+Sigma'">
             <h1 class="text-2xl font-bold text-slate-100">Data <span class="text-blue-500">Sigma</span> Consultoria</h1> 
-            <div class="hidden md:flex space-x-6">
-                <a href="#pitch" class="text-slate-300 hover:text-blue-400 font-medium">Pitch</a>
+            <div class="hidden md:flex space-x-3">
+                <a href="#DNA" class="text-slate-300 hover:text-blue-400 font-medium">DNA</a>
                 <a href="#deliverables" class="text-slate-300 hover:text-blue-400 font-medium">Entregáveis</a>
                 <a href="#canvas" class="text-slate-300 hover:text-blue-400 font-medium">O Modelo</a>
                 <a href="#projections" class="text-slate-300 hover:text-blue-400 font-medium">Projeções</a>
-                <a href="#diagnostico" class="text-slate-300 hover:text-blue-400 font-medium">Diagnóstico</a>
+                <a href="#diagnostico" class="text-slate-300 hover:text-blue-400 font-medium">Produto de Dados</a>
+                <!-- Link Novo Adicionado Aqui -->
+                <a href="infografico.html" class="text-blue-400 hover:text-blue-300 font-bold ml-4 border border-blue-500 rounded px-2">Infográfico</a>
             </div>
         </div>
     </header>
@@ -128,14 +177,55 @@
         <div class="relative">
             <div class="timeline hidden md:block"></div>
 
-            <div id="pitch" class="timeline-item text-center mb-24 md:mb-32 reveal">
+            <div id="DNA" class="timeline-item text-center mb-24 md:mb-32 reveal">
                 <div class="timeline-dot hidden md:block"></div>
-                <h2 class="text-4xl md:text-5xl font-extrabold text-slate-100 leading-tight mb-4">O Pitch: A Conexão Perdida do Mercado</h2>
+                <h2 class="text-4xl md:text-5xl font-extrabold text-slate-100 leading-tight mb-4">Nosso DNA: Ser a ponte entre a eficiência Lean e a Potência Cloud</h2>
                 <p class="text-xl text-slate-400 max-w-4xl mx-auto mb-8">Empresas gastam rios de dinheiro em sistemas e consultorias, mas continuam com os mesmos problemas: processos lentos e decisões baseadas em achismo. Por quê?</p>
                 <p class="text-2xl font-semibold text-slate-100 max-w-4xl mx-auto glass-card p-8 rounded-lg border-l-4 border-blue-500 shadow-lg shadow-blue-500/10">
                     Porque as consultorias de <span class="text-blue-400">processos</span> não dominam <span class="text-blue-400">dados</span>, e as de <span class="text-blue-400">dados</span> não entendem de <span class="text-blue-400">processos</span>. Nós somos a ponte. Combinamos Lean Six Sigma e Business Intelligence para transformar dados em lucro e eficiência.
                 </p>
             </div>
+
+            <section id="time" class="py-16">
+             <div class="container mx-auto px-6">
+            <div class="text-center">
+             <h2 class="text-4xl font-extrabold text-slate-100 mb-4">Nosso time<br><br></h2>
+
+             <div class="grid gap-8 md:grid-cols-3">
+             <!-- Matheus -->
+             <div class="flex flex-col items-center text-center">
+             <img src="matheus.png" alt="Matheus" onerror="this.src='https://placehold.co/150/1e293b/cbd5e1?text=Matheus'"
+             class="h-32 w-32 rounded-full object-cover mb-4 ring-2 ring-blue-500">
+             <h3 class="text-xl font-semibold text-slate-100">Matheus G.</h3>
+             <p class="text-slate-400 text-sm" ;style="text-align: justify;"> <br><b> Visualização Avançada:</b> Domínio de ferramentas modernas (Looker Studio, Power BI) para criar dashboards que realmente contam uma história.
+             <br>
+               <br> <b> Engenharia de Dados em Nuvem:</b> Especialista no ecossistema Google Cloud Platform (GCP) e Dataprep para tratamento ágil de informações.
+               <br>
+               <br> <b> Storytelling Analítico:</b> Capacidade de traduzir métricas técnicas em indicadores de performance (KPIs) compreensíveis para qualquer nível hierárquico.</p>
+             </div>
+
+             <!-- Rau -->
+             <div class="flex flex-col items-center text-center">
+             <img src="raur.png" alt="Rau" onerror="this.src='https://placehold.co/150/1e293b/cbd5e1?text=Rau'"
+             class="h-32 w-32 rounded-full object-cover mb-4 ring-2 ring-blue-500">
+             <h3 class="text-xl font-semibold text-slate-100">Raú R.</h3>
+             <p class="text-slate-400 text-sm" ;style="text-align: justify;"> <br><b>Metodologias Estruturadas:</b> Domínio em Lean Seis Sigma, WCM e melhoria contínua para resolver problemas complexos.
+             <br><br> <b>Visão Sistêmica:</b> Capacidade única de enxergar como processos mal desenhados afetam os dados e, consequentemente, as pessoas.
+             <br><br> <b>Experiência Industrial:</b> Vivência prática em multinacionais (alimentícia e cosmética), trazendo o rigor e a aplicabilidade da vida real.</p>
+             </div>
+
+             <!-- Mathaus -->
+             <div class="flex flex-col items-center text-center">
+             <img src="mathaus.png" alt="Mathaus" onerror="this.src='https://placehold.co/150/1e293b/cbd5e1?text=Mathaus'"
+             class="h-32 w-32 rounded-full object-cover mb-4 ring-2 ring-blue-500">
+             <h3 class="text-xl font-semibold text-slate-100">Mathaus A.</h3>
+             <p class="text-slate-400 text-sm";style="text-align: justify;"> <br><b> Integrações Complexas:</b> Expertise técnica para conectar a consultoria a sistemas legados e ERPs de grande porte, como o SAP.
+            <br><br> <b> Arquitetura de Dados:</b> Especialista em backend, garantindo que o fluxo de dados seja confiável e estruturado corretamente desde a origem.
+            <br><br> <b> Confiabilidade Tech:</b> Responsável por garantir que a infraestrutura técnica não seja um gargalo para a tomada de decisão.</p>
+             </div>
+             </div>
+             </div>
+            </section>
 
             <div id="deliverables" class="timeline-item mb-24 md:mb-32 reveal">
                 <div class="timeline-dot hidden md:block"></div>
@@ -145,7 +235,7 @@
                 </div>
                 <div class="mt-12 grid md:grid-cols-3 gap-8">
                     <div class="glass-card p-8 rounded-lg shadow-lg hover:shadow-blue-500/20 transition-shadow duration-300 border-t-4 border-blue-400">
-                        <h3 class="text-2xl font-bold mb-3 text-slate-100">1. Diagnostic & Insights</h3>
+                        <h3 class="text-2xl font-bold mb-3 text-slate-100">1. Diagnósticos & Insights</h3>
                         <p class="text-slate-400 mb-4">Mapeamos processos e dados para encontrar gargalos e oportunidades escondidas.</p>
                         <ul class="list-disc list-inside space-y-2 text-slate-300">
                             <li>Assessment de processos e dados</li>
@@ -154,7 +244,7 @@
                         </ul>
                     </div>
                     <div class="glass-card p-8 rounded-lg shadow-lg hover:shadow-blue-500/20 transition-shadow duration-300 border-t-4 border-blue-500">
-                        <h3 class="text-2xl font-bold mb-3 text-slate-100">2. Data Driven Operations</h3>
+                        <h3 class="text-2xl font-bold mb-3 text-slate-100">2. Operações Data Driven</h3>
                         <p class="text-slate-400 mb-4">Implementamos a cultura de dados, conectando métricas a decisões operacionais.</p>
                         <ul class="list-disc list-inside space-y-2 text-slate-300">
                             <li>Dashboards operacionais interativos</li>
@@ -163,7 +253,7 @@
                         </ul>
                     </div>
                     <div class="glass-card p-8 rounded-lg shadow-lg hover:shadow-blue-500/20 transition-shadow duration-300 border-t-4 border-blue-600">
-                        <h3 class="text-2xl font-bold mb-3 text-slate-100">3. Continuous Excellence</h3>
+                        <h3 class="text-2xl font-bold mb-3 text-slate-100">3. Melhoria Contínua</h3>
                         <p class="text-slate-400 mb-4">Atuamos como parceiro estratégico para sustentar a melhoria e gerar ganhos recorrentes.</p>
                         <ul class="list-disc list-inside space-y-2 text-slate-300">
                             <li>Monitoramento mensal de KPIs críticos</li>
@@ -227,41 +317,78 @@
                 </div>
             </div>
 
+            <!-- SUBSTITUIÇÃO: Diagnóstico Interativo pelo Data Product Canvas -->
             <div id="diagnostico" class="timeline-item reveal">
                 <div class="timeline-dot hidden md:block"></div>
                 <div class="text-center">
-                     <h2 class="text-4xl font-extrabold text-slate-100 mb-4">Diagnóstico Interativo</h2>
-                    <p class="text-xl text-slate-400 max-w-3xl mx-auto">Simule o primeiro contato com um cliente. Responda ao formulário para ver como capturamos valor desde o início.</p>
+                     <h2 class="text-4xl font-extrabold text-slate-100 mb-4">Data Product Canvas Interativo</h2>
+                    <p class="text-xl text-slate-400 max-w-3xl mx-auto">Mapeie seu produto de dados diretamente aqui. Salve seu progresso ou exporte o resultado.</p>
                 </div>
-                <div id="form-container" class="mt-12 glass-card p-8 rounded-lg shadow-lg max-w-4xl mx-auto">
-                    <form id="diag-form" class="space-y-6">
-                        <div>
-                            <label for="nome" class="block text-sm font-medium text-slate-300 mb-2">Qual é o seu nome?</label>
-                            <input type="text" id="nome" required class="w-full bg-slate-700/50 border border-slate-600 rounded-md p-3 text-slate-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                
+                <!-- Barra de Ferramentas do Canvas -->
+                <div class="mt-12 glass-card p-4 rounded-lg shadow-lg max-w-[1400px] mx-auto mb-6 flex flex-col md:flex-row justify-between items-center gap-4">
+                     <div class="flex items-center gap-4">
+                        <div class="bg-blue-600 text-white w-10 h-10 flex items-center justify-center rounded-lg shadow-md font-bold">DS</div>
+                        <h3 class="text-lg font-bold text-slate-200"> Crie conosco seu Produto de Dados</h3>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-2">
+                        <select id="history-dropdown" class="bg-slate-700 border border-slate-600 text-slate-200 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5">
+                            <option selected>Carregar Histórico...</option>
+                        </select>
+                        <button id="new-btn" class="bg-slate-600 hover:bg-slate-500 text-white font-bold py-2 px-4 rounded-lg text-sm transition-colors">Novo</button>
+                        <button id="save-btn" class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-lg text-sm transition-colors shadow-lg shadow-blue-500/30">Salvar</button>
+                        <button id="delete-btn" class="bg-red-600 hover:bg-red-500 text-white font-bold py-2 px-4 rounded-lg text-sm transition-colors shadow-lg shadow-red-500/30">Deletar</button>
+                        <button id="generate-pdf-btn" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2 px-4 rounded-lg text-sm transition-colors shadow-lg shadow-emerald-500/30">Gerar PDF</button>
+                    </div>
+                </div>
+
+                <!-- Área do Canvas (ID importante para o PDF) -->
+                <div id="canvas-content" class="glass-card p-6 rounded-2xl shadow-lg max-w-[1400px] mx-auto border border-slate-700">
+                    
+                     <!-- Informações Básicas -->
+                    <section class="mb-6 p-4 bg-slate-800/50 rounded-lg border border-slate-700">
+                        <h3 class="text-lg font-bold text-blue-400 mb-4">Informações do Produto de Dados</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
+                            <div><label class="font-semibold text-slate-400 block mb-1">Produto:</label><input id="produto-nome" type="text" placeholder="Nome do Projeto" class="pm-canvas-input"></div>
+                            <div><label class="font-semibold text-slate-400 block mb-1">Data:</label><input id="produto-data" type="date" class="pm-canvas-input"></div>
+                            <div><label class="font-semibold text-slate-400 block mb-1">Versão:</label><input id="produto-versao" type="text" value="1.0" class="pm-canvas-input"></div>
+                            <div><label class="font-semibold text-slate-400 block mb-1">Responsável:</label><input id="produto-responsavel" type="text" placeholder="Nome do Dono" class="pm-canvas-input"></div>
                         </div>
-                        <div>
-                            <label for="email" class="block text-sm font-medium text-slate-300 mb-2">E o seu e-mail profissional?</label>
-                            <input type="email" id="email" required class="w-full bg-slate-700/50 border border-slate-600 rounded-md p-3 text-slate-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                    </section>
+
+                    <!-- GRID DO CANVAS -->
+                    <div class="grid grid-cols-1 lg:grid-cols-5 gap-4">
+                        
+                        <!-- Coluna 1 -->
+                        <div class="lg:col-span-1 flex flex-col gap-4">
+                            <div class="pm-canvas-card"><h3>Problema</h3><p>Qual a dor de negócio?</p><textarea id="problema" class="pm-canvas-textarea" placeholder="Descreva o problema..."></textarea></div>
+                            <div class="pm-canvas-card"><h3>Valores/Retorno</h3><p>Potenciais ganhos?</p><textarea id="valores" class="pm-canvas-textarea" placeholder="Ganhos financeiros..."></textarea></div>
                         </div>
-                         <div>
-                            <p class="block text-sm font-medium text-slate-300 mb-2">Pensando no seu principal processo operacional, qual destas frases descreve melhor a sua realidade hoje?</p>
-                            <div class="space-y-2">
-                                <label class="flex items-center p-3 w-full bg-slate-700/50 rounded-md border border-slate-600 hover:bg-slate-700 cursor-pointer"><input type="radio" name="processo" value="otimo" class="h-4 w-4 text-blue-600 bg-slate-800 border-slate-500 focus:ring-blue-500"><span class="ml-3 text-slate-200">Tudo flui bem, é padronizado e raramente temos surpresas.</span></label>
-                                <label class="flex items-center p-3 w-full bg-slate-700/50 rounded-md border border-slate-600 hover:bg-slate-700 cursor-pointer"><input type="radio" name="processo" value="gargalos" class="h-4 w-4 text-blue-600 bg-slate-800 border-slate-500 focus:ring-blue-500"><span class="ml-3 text-slate-200">Funciona, mas dependemos de pessoas específicas e temos gargalos.</span></label>
-                                <label class="flex items-center p-3 w-full bg-slate-700/50 rounded-md border border-slate-600 hover:bg-slate-700 cursor-pointer"><input type="radio" name="processo" value="retrabalho" class="h-4 w-4 text-blue-600 bg-slate-800 border-slate-500 focus:ring-blue-500"><span class="ml-3 text-slate-200">Temos retrabalho com frequência e 'apagamos incêndios'.</span></label>
-                            </div>
+
+                        <!-- Coluna 2 -->
+                        <div class="lg:col-span-1 flex flex-col gap-4">
+                            <div class="pm-canvas-card"><h3>Dados</h3><p>Origens e Prontidão.</p><textarea id="dados" class="pm-canvas-textarea" placeholder="Fontes de dados..."></textarea></div>
+                            <div class="pm-canvas-card"><h3>Hipóteses</h3><p>O que será testado?</p><textarea id="hipoteses" class="pm-canvas-textarea" placeholder="Hipóteses a validar..."></textarea></div>
                         </div>
-                        <div>
-                            <label for="problema" class="block text-sm font-medium text-slate-300 mb-2">Se você pudesse resolver UM grande problema na sua operação na próxima semana, qual seria?</label>
-                            <textarea id="problema" rows="4" required class="w-full bg-slate-700/50 border border-slate-600 rounded-md p-3 text-slate-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"></textarea>
+
+                        <!-- Coluna 3 -->
+                        <div class="lg:col-span-1 flex flex-col gap-4">
+                            <div class="pm-canvas-card"><h3>Solução</h3><p>Tipo e descrição.</p><textarea id="solucao" class="pm-canvas-textarea" placeholder="Descrição da solução..."></textarea></div>
+                            <div class="pm-canvas-card"><h3>Riscos</h3><p>Principais riscos?</p><textarea id="riscos" class="pm-canvas-textarea" placeholder="Riscos envolvidos..."></textarea></div>
                         </div>
-                        <div class="text-center">
-                            <button type="submit" class="bg-blue-600 text-white font-bold py-3 px-8 rounded-full hover:bg-blue-500 transition-all duration-300 shadow-lg hover:shadow-blue-500/50 transform hover:scale-105">Enviar Diagnóstico</button>
+
+                        <!-- Coluna 4 -->
+                        <div class="lg:col-span-1 flex flex-col gap-4">
+                            <div class="pm-canvas-card"><h3>KPIs</h3><p>Métricas de sucesso.</p><textarea id="kpis" class="pm-canvas-textarea" placeholder="Indicadores chave..."></textarea></div>
+                            <div class="pm-canvas-card"><h3>Atores</h3><p>Sponsors e Usuários.</p><textarea id="atores" class="pm-canvas-textarea" placeholder="Quem está envolvido..."></textarea></div>
+                            <div class="pm-canvas-card"><h3>Performance</h3><p>Onde ver o impacto?</p><textarea id="performance" class="pm-canvas-textarea" placeholder="Acompanhamento..."></textarea></div>
                         </div>
-                    </form>
-                    <div id="form-thank-you" class="hidden text-center py-10">
-                        <h3 class="text-3xl font-bold text-blue-400 mb-4">Obrigado!</h3>
-                        <p class="text-lg text-slate-300">Seus insights estão a caminho. Nossa equipe analisará suas respostas e entrará em contato em breve.</p>
+
+                        <!-- Coluna 5 -->
+                        <div class="lg:col-span-1 flex flex-col gap-4">
+                            <div class="pm-canvas-card h-full"><h3>Ações</h3><p>Ações para gerar valor?</p><textarea id="acoes" class="pm-canvas-textarea" placeholder="Lista de ações..."></textarea></div>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -271,12 +398,13 @@
 
     <footer class="bg-slate-900/50 mt-24">
         <div class="container mx-auto px-6 py-8 text-center text-slate-400">
-            <p>&copy; 2025 Lean & Data Driven BI Consulting.</p>
+            <p>&copy; 2026 Data Sigma - Consultoria Lean & Data Driven BI | Todos os Direitos Reservados.</p>
         </div>
     </footer>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            // --- Lógica Original do Site (Partículas, Gráficos, Navegação) ---
             const canvasBlocks = document.querySelectorAll('.canvas-block');
             const detailContents = document.querySelectorAll('.detail-content');
             const initialDetail = document.getElementById('detail-initial');
@@ -448,27 +576,169 @@
                 observer.observe(el);
             });
             
-            const diagForm = document.getElementById('diag-form');
-            const formContainer = document.getElementById('form-container');
-            const formThankYou = document.getElementById('form-thank-you');
+            // --- NOVA LÓGICA DO DATA PRODUCT CANVAS ---
+            const saveBtn = document.getElementById('save-btn');
+            const newBtn = document.getElementById('new-btn');
+            const deleteBtn = document.getElementById('delete-btn');
+            const historyDropdown = document.getElementById('history-dropdown');
+            const generatePdfBtn = document.getElementById('generate-pdf-btn');
+            
+            const formFields = [
+                'produto-nome', 'produto-data', 'produto-versao', 'produto-responsavel',
+                'problema', 'valores', 'dados', 'hipoteses', 'solucao', 'riscos',
+                'kpis', 'atores', 'performance', 'acoes'
+            ];
 
-            diagForm.addEventListener('submit', function(event) {
-                event.preventDefault();
-                diagForm.classList.add('fade-out');
-                setTimeout(() => {
-                    diagForm.style.display = 'none';
-                    formThankYou.style.display = 'block';
-                    formThankYou.classList.add('fade-in');
-                }, 500);
+            const getHistory = () => JSON.parse(localStorage.getItem('dataCanvasHistory')) || [];
+            const saveHistory = (history) => localStorage.setItem('dataCanvasHistory', JSON.stringify(history));
+
+            const populateHistoryDropdown = () => {
+                const history = getHistory();
+                historyDropdown.innerHTML = '<option selected>Carregar Histórico...</option>';
+                history.forEach(item => {
+                    const option = document.createElement('option');
+                    option.value = item.id;
+                    option.textContent = item.id;
+                    historyDropdown.appendChild(option);
+                });
+            };
+
+            const clearCanvas = () => {
+                formFields.forEach(id => {
+                    document.getElementById(id).value = '';
+                });
+                 document.getElementById('produto-versao').value = '1.0';
+                historyDropdown.selectedIndex = 0;
+            };
+
+            const saveCanvas = () => {
+                const productName = document.getElementById('produto-nome').value.trim();
+                if (!productName) {
+                    alert('Por favor, preencha o campo "Produto" para salvar.');
+                    return;
+                }
+
+                const history = getHistory();
+                const canvasData = { id: productName };
+                formFields.forEach(id => {
+                    canvasData[id] = document.getElementById(id).value;
+                });
+
+                const existingIndex = history.findIndex(item => item.id === productName);
+                if (existingIndex > -1) {
+                    history[existingIndex] = canvasData; // Update existing
+                } else {
+                    history.push(canvasData); // Add new
+                }
+
+                saveHistory(history);
+                populateHistoryDropdown();
+                historyDropdown.value = productName;
+                alert(`Canvas "${productName}" salvo com sucesso!`);
+            };
+            
+            const loadCanvas = (id) => {
+                if (!id || id === 'Carregar Histórico...') return;
+                const history = getHistory();
+                const canvasData = history.find(item => item.id === id);
+                if (canvasData) {
+                    formFields.forEach(fieldId => {
+                        document.getElementById(fieldId).value = canvasData[fieldId] || '';
+                    });
+                }
+            };
+
+            const deleteCanvas = () => {
+                const selectedId = historyDropdown.value;
+                if (!selectedId || selectedId === 'Carregar Histórico...') {
+                    alert('Selecione um item do histórico para deletar.');
+                    return;
+                }
+                if (confirm(`Tem certeza que deseja deletar o canvas "${selectedId}"?`)) {
+                    let history = getHistory();
+                    history = history.filter(item => item.id !== selectedId);
+                    saveHistory(history);
+                    clearCanvas();
+                    populateHistoryDropdown();
+                    alert(`Canvas "${selectedId}" deletado.`);
+                }
+            };
+
+            saveBtn.addEventListener('click', saveCanvas);
+            newBtn.addEventListener('click', clearCanvas);
+            deleteBtn.addEventListener('click', deleteCanvas);
+            historyDropdown.addEventListener('change', (e) => loadCanvas(e.target.value));
+
+            // PDF Generation
+            generatePdfBtn.addEventListener('click', () => {
+                const btn = generatePdfBtn;
+                const canvasContent = document.getElementById('canvas-content');
+                
+                const originalBtnText = btn.innerText;
+                btn.innerText = 'Gerando...';
+                btn.disabled = true;
+
+                html2canvas(canvasContent, { 
+                    scale: 2,
+                    useCORS: true,
+                    logging: false,
+                    backgroundColor: '#1e293b', // Garante fundo escuro no PDF
+                    onclone: (doc) => {
+                        const elementsToReplace = doc.querySelectorAll('textarea, input');
+                        elementsToReplace.forEach(el => {
+                            const div = doc.createElement('div');
+                            div.style.whiteSpace = 'pre-wrap';
+                            div.style.padding = '0.5rem';
+                            div.style.border = '1px solid #475569';
+                            div.style.borderRadius = '0.375rem';
+                            div.style.fontSize = '0.875rem';
+                            div.style.color = '#e2e8f0'; // Texto claro no PDF
+                            div.style.minHeight = el.offsetHeight + 'px';
+                            div.textContent = el.value;
+                            el.parentNode.replaceChild(div, el);
+                        });
+                    }
+                }).then(canvas => {
+                    const imgData = canvas.toDataURL('image/png');
+                    const { jsPDF } = window.jspdf;
+                    const pdf = new jsPDF('l', 'mm', 'a4');
+                    const pdfWidth = pdf.internal.pageSize.getWidth();
+                    const pdfHeight = pdf.internal.pageSize.getHeight();
+                    const ratio = canvas.width / canvas.height;
+                    
+                    let finalWidth = pdfWidth - 20;
+                    let finalHeight = finalWidth / ratio;
+                    
+                    if (finalHeight > pdfHeight - 20) {
+                        finalHeight = pdfHeight - 20;
+                        finalWidth = finalHeight * ratio;
+                    }
+                    
+                    const x = (pdfWidth - finalWidth) / 2;
+                    const y = (pdfHeight - finalHeight) / 2;
+
+                    // Adiciona fundo escuro à página do PDF para combinar
+                    pdf.setFillColor(15, 23, 42); // slate-900
+                    pdf.rect(0, 0, pdfWidth, pdfHeight, 'F');
+
+                    pdf.addImage(imgData, 'PNG', x, y, finalWidth, finalHeight);
+                    const productName = document.getElementById('produto-nome').value.trim() || 'Data_Product_Canvas';
+                    pdf.save(`${productName.replace(/ /g, '_')}.pdf`);
+
+                }).catch(error => {
+                    console.error("Erro ao gerar o PDF:", error);
+                    alert("Ocorreu um erro ao gerar o PDF.");
+                }).finally(() => {
+                    btn.innerText = originalBtnText;
+                    btn.disabled = false;
+                });
             });
+
+            // Initial Load for Canvas
+            populateHistoryDropdown();
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('produto-data').value = today;
         });
     </script>
-    <style>
-        .fade-out { animation: fadeOut 0.5s ease-in-out forwards; }
-        @keyframes fadeOut {
-            from { opacity: 1; transform: translateY(0); }
-            to { opacity: 0; transform: translateY(-10px); }
-        }
-    </style>
 </body>
 </html>
